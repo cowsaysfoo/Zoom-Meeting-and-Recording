@@ -34,13 +34,13 @@ def restartZoom():
 parser = argparse.ArgumentParser(description="Automatically connect to a Zoom call")
 parser.add_argument("id", help="The id of the meeting to join", type=str)
 
-parser.add_argument("-a", "--audio", help="Enable the audio")
-parser.add_argument("-V", "--video", help="Enable video")
-parser.add_argument("-v", "--verbose", help="Enable verbose logging")
+parser.add_argument("-a", "--audio", help="Enable the audio", action="store_true")
+parser.add_argument("-V", "--video", help="Enable video", action="store_true")
+parser.add_argument("-v", "--verbose", help="Enable verbose logging", action="store_true")
 parser.add_argument("-n", "--name", help="The name to display", type=str)
 
 parser.add_argument("-p", "--password", help="The password to use", type=str)
-parser.add_argument("-r", "--record", help="Enable recording of the call")
+parser.add_argument("-r", "--record", help="Enable recording of the call", action="store_true")
 
 
 args = parser.parse_args()
