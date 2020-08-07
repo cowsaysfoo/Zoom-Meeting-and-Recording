@@ -3,7 +3,7 @@ import time
 import sys
 import os
 import argparse
-
+import locate
 
 parser = argparse.ArgumentParser(description="Automatically connect to a Zoom call")
 parser.add_argument("id", help="The id of the meeting to join", type=str)
@@ -18,7 +18,6 @@ parser.add_argument("-r", "--record", help="Enable recording of the call")
 
 
 args = parser.parse_args()
-
 #Kill Zoom and restart
 #We need to inverse it so it doesn't kill the current process
 os.system("ps aux | grep zoom | grep autozoom -v |  awk '{print $2}' | xargs kill")
@@ -26,12 +25,12 @@ time.sleep(1)
 os.system('/usr/bin/zoom &')
 time.sleep(3)
 
-x,y = pyautogui.locateCenterOnScreen('joinButton4k.png', confidence=0.5)
+x,y = locate.locate('btnJoin')
 pyautogui.click(x,y)
 time.sleep(3)
 
 #Enter meeting id
-x,y = pyautogui.locateCenterOnScreen('meetid4k.png', confidence=0.5)
+x,y = locate.locate('txtId')
 pyautogui.click(x,y)
 time.sleep(1)
 pyautogui.write(args.id)
@@ -65,15 +64,15 @@ if args.password:
     time.sleep(3)
 
     #Check for error message
-    result = pyautogui.locateCenterOnScreen('errorid.png', confidence=0.5)
+    result = locate.locate('errorid')
 
     #If there is an error message, remove it
     if result:
-        x, y = pyautogui.locateCenterOnScreen('leave.png', confidence=0.5)
+        x, y = locate.locate('btnLeave')
         pyautogui.click(x,y)
         time.sleep(3)
 
-    result = pyautogui.locateCenterOnScreen('meetpass4k.png', confidence=0.5)
+    result = locate.locate('txtPass')
 
     #If the error was actuall fake, and password thing is there, enter the password
     if result:
