@@ -25,3 +25,4 @@ python3 autozoom.py 1234567890 -p abcde6 -n "John Smith"
 * Windows support
 * Autoscheduling meetings
 * Recording (quietly)
+* Resolution independence (PyAutoGUI can be finicky with localting buttons with different resolutions)
