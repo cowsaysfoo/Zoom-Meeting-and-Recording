@@ -22,11 +22,13 @@ Ex. To connect to a meeting with id 1234567890, password abcde6 and the name Joh
 ```
 python3 autozoom.py 1234567890 -p abcde6 -n "John Smith"
 ```
+## Considerations
+Due to this tool pressing buttons and looking from them on the computer screen, your system must be logged in and on.
 
 ## Small Workarounds
 ### Unsupported resolutions
 If your resolution is not supported, you can go through and manually screenshot the Zoom components yourself:
-1. Create a folder named <yourwidth>x<yourheight> on Linux, <yourwidth>x<yourheight>windows on Windows
+1. Create a folder named YOURWIDTHxYOURHEIGHT on Linux, YOURWIDTHxYOURHEIGHTwindows on Windows
 2. Look at the other folders pictures and capture the same components using a screen capture tool. (Windows+Shift+S works well for Windows)
 3. Name accordingly and place them in your folder from step 1.
 **Note that btnLeave.png is the blue button on the 'Invalid meeting id window'
