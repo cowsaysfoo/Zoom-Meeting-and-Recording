@@ -8,8 +8,9 @@ Use this to automatically connect to Zoom meetings from the command line. Note, 
 Make sure you have Python3. Also, you'll need the following packages:
 * pyautogui
 * opencv
+
 You can install this with the following command:
-`pip3 install pyautogui opencv-python`
+```pip3 install pyautogui opencv-python```
 
 ## Usage
 ```
@@ -21,6 +22,7 @@ Ex. To connect to a meeting with id 1234567890, password abcde6 and the name Joh
 ```
 python3 autozoom.py 1234567890 -p abcde6 -n "John Smith"
 ```
+
 ## Small Workarounds
 ### Unsupported resolutions
 If your resolution is not supported, you can go through and manually screenshot the Zoom components yourself:
