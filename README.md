@@ -21,9 +21,21 @@ Ex. To connect to a meeting with id 1234567890, password abcde6 and the name Joh
 ```
 python3 autozoom.py 1234567890 -p abcde6 -n "John Smith"
 ```
+## Small Workarounds
+### Unsupported resolutions
+If your resolution is not supported, you can go through and manually screenshot the Zoom components yourself:
+1. Create a folder named <yourwidth>x<yourheight> on Linux, <yourwidth>x<yourheight>windows on Windows
+2. Look at the other folders pictures and capture the same components using a screen capture tool. (Windows+Shift+S works well for Windows)
+3. Name accordingly and place them in your folder from step 1.
+**Note that btnLeave.png is the blue button on the 'Invalid meeting id window'
+  
+### Meeting ID Dropdown
+Sometimes, if you use Zoom a lot, it will add a little 'V' to the meeting ID field. autozoom.py defaults to working with this. If you don't have it, you can join a bunch of meetings to get it.
 
-## Upcoming
-* Windows support
+### Dual Monitors on Windows
+Currently, dual monitor support for Windows does not work well. If you have 2 monitors, make sure Zoom starts on your primary one. Otherwise, Pyautogui is not able to locate the buttons
+
+## Upcoming Features
 * Autoscheduling meetings
 * Recording (quietly)
-* Resolution independence (PyAutoGUI can be finicky with localting buttons with different resolutions)
+* Better Resolution independence (Currently support 1920x1080, 1440x2560, 3840x2160)
