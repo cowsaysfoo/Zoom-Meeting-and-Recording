@@ -7,8 +7,9 @@ Use this to automatically connect to Zoom meetings from the command line. Note, 
 ## Installation
 Make sure you have Python3. Also, you'll need the following packages:
 * pyautogui
+* opencv
 You can install this with the following command:
-`pip3 install pyautogui`
+`pip3 install pyautogui opencv-python`
 
 ## Usage
 ```
