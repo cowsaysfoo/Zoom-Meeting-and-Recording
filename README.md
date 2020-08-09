@@ -34,7 +34,7 @@ Ex. To connect to a meeting with id 1234567890, password abcde6 and the name Joh
 python3 autozoom.py join 1234567890 -p abcde6 -n "John Smith"
 ```
 
-### Schedules
+### Schedules (Linux only, Windows coming soon)
 #### Basic Scheduling
 Ex. To schedule a class on Monday, Wednesday, Friday at 3:30 pm with id 123456789, password abcde6 and name CS216:
 ```
