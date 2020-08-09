@@ -7,7 +7,7 @@ PREFIX = 'AUTOZOOM'
 
 #Get path of file being executed to know what to call from CRON
 def getFullPath():
-    return __file__
+    return __file__.replace('scheduling', 'autozoom')
 
 #Days will be inputted as 'umtwrfs'
 def dayTimeToCron(days, time):
@@ -26,7 +26,7 @@ def dayTimeToCron(days, time):
 
 #Create the command to run
 def argsToCmd(path, id, password, audio, video, record, name):
-    return 'python3 {} join {}'.format(path, id) + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else '')])
+    return '{} "python3 {} join {}"'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id) + ' ' + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else '')])
 
 #Create raw line to add to cron
 def createCronLine(name, cron, cmd):

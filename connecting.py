@@ -22,7 +22,7 @@ def restartZoom():
     
 def connect(id, password, audio, video, name, fixdropdown):
     #We need to inverse it so it doesn't kill the current process
-    restartZoom()
+    #restartZoom()
     time.sleep(3)
 
     x,y = locate.locate('btnJoin')
