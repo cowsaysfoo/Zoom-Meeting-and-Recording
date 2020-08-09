@@ -18,7 +18,7 @@ def dayTimeToCron(days, time):
 
     day_key = list('umtwrfs')
     date = parser.parse(time)
-    cron_days = ','.join([str(day_key.index(d) + 1) for d in days])
+    cron_days = ','.join([str(day_key.index(d)) for d in days])
     minute = date.minute
     hour = date.hour
 
@@ -50,16 +50,14 @@ def addOrReplaceCron(head, crontime, command):
     for job in cron:
         #Replace the job here
         if head in job.comment:
-            print('Schedule {} already exists, updating'.format(head))
+            print('Updating existing schedule'.format(head))
             job.setall(crontime)
             job.command = command
             added = True
 
     #Add to the end
     if not added:
-        print('Schedule {} doesn\'t exist, creating'.format(head))
         job = cron.new(command=command, comment=head)
-        print('Setting time')
         job.setall(crontime)
 
     cron.write()
@@ -69,31 +67,41 @@ def createHead(name):
     return '[{}]{}'.format(PREFIX, name)
 
 def cronUnschedule(schedulename):
-    head = createHead(schedulename)
+    if schedulename.lower() == 'all':
+        head = createHead('')
+    else:
+       head = createHead(schedulename)
 
     cron = CronTab(user=getpass.getuser())
 
     removed = False
     for job in cron:
         if head in job.comment:
-            print('Removed cronjob {}'.format(head))
             cron.remove(job)
             removed = True
 
     if not removed:
-        print('{} not found. Unable to remove'.format(head))
+        print('Schedule not found. Unable to remove'.format(head))
 
     cron.write()
 
 #Used for scheduling Zoom calls to happen at certain times
-def cronSchedule(schedulename, crontime, id, password, audio, visual, record, name):
+def cronSchedule(schedulename, crontime, id, password, audio, video, record, name):
     global PREFIX
     head = createHead(schedulename)
     path = getFullPath()
-    cmd = argsToCmd(path, id, password, audio, visual, record, name)
+    cmd = argsToCmd(path, id, password, audio, video, record, name)
 
     addOrReplaceCron(head, crontime, cmd)
 
 
-def dayTimeSchedule(schedulename, days, time, id, password, audio, visual, record, name):
-    cronSchedule(schedulename, dayTimeToCron(days, time), id, password, audio, visual, record, name)
+def dayTimeSchedule(schedulename, days, time, id, password, audio, video, record, name):
+    cronSchedule(schedulename, dayTimeToCron(days, time), id, password, audio, video, record, name)
+
+def listSchedule():
+    cron = CronTab(user=getpass.getuser())
+
+    for job in cron:
+        if '[{}]'.format(PREFIX) in job.comment:
+            name = job.comment.split('[{}]'.format(PREFIX))[1]
+            print('{} scheduled {}'.format(name, job.description(use_24hour_time_format=False)))
