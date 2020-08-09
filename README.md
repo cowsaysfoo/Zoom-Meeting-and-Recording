@@ -9,11 +9,12 @@ Make sure you have Python3. Also, you'll need the following packages:
 * pyautogui
 * opencv
 * python-crontab (Linux only)
+* cron_descriptor (Linux only)
 
 You can install this with the following commands):
 ### Linux
 ```
-pip3 install pyautogui opencv-python python-crontab
+pip3 install pyautogui opencv-python python-crontab cron_descriptor
 ```
 
 ### Windows
