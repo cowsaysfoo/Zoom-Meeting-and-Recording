@@ -23,14 +23,37 @@ pip3 install pyautogui opencv-python
 
 ## Usage
 ```
-usage: autozoom.py [-h] [-a AUDIO] [-V VIDEO] [-v VERBOSE] [-n NAME]
-                   [-p PASSWORD] [-r RECORD]
-                   id
+usage: autozoom.py [-h] [-f FIX_DROP_DOWN] [-a] [-V] [-v] [-n NAME]
+                   [-p PASSWORD] [-r] [-s SCHEDULENAME] [-c CRON] [-d DAYS]
+                   [-t TIME]
+                   {join,schedule,unschedule} id
 ```
+### Connecting
 Ex. To connect to a meeting with id 1234567890, password abcde6 and the name John Smith:
 ```
-python3 autozoom.py 1234567890 -p abcde6 -n "John Smith"
+python3 autozoom.py join 1234567890 -p abcde6 -n "John Smith"
 ```
+
+### Schedules
+#### Basic Scheduling
+Ex. To schedule a class on Monday, Wednesday, Friday at 3:30 pm with id 123456789, password abcde6 and name CS216:
+```
+python3 autozoom.py schedule 123456789 -p abcde6 -d mwf -t "3:30pm" -s CS216
+```
+
+#### Unscheduling (WIP)
+(Note these need a 'dummy id' for now while the argument system is reworked)
+To remove, simply run:
+```
+python3 autozoom.py unschedule dummyid -s CS216
+```
+
+#### Listing (WIP)
+To list all scheduled meetings, run:
+```
+python3 autozoom.py list dummyid
+```
+
 ## Considerations
 Due to this tool pressing buttons and looking from them on the computer screen, your system must be logged in and on.
 
