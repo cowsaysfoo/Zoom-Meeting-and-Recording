@@ -1,6 +1,6 @@
 # AutoZoom
 Automatically connect to Zoom meetings through a script.
-Inspired by [this](https://github.com/BigchillRK/Zoom-Meeting-and-Recording).
+Inspired by [this](https://github.com/BigchillRK/Zoom-Meeting-and-Recording). If you have any problems or feature suggestions, please submit an issue.
 ## Overview
 Use this to automatically connect to Zoom meetings from the command line. Note, this only works on Linux at the moment.
 
