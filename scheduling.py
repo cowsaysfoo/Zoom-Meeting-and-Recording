@@ -1,16 +1,16 @@
-from platforms import getPlatform, LINUX, WINDOWS
+"""Used to automatically schedule meetings through CRON or Windows equivalent"""
+import getpass
 from dateutil import parser
 from crontab import CronTab
-import getpass
 
 PREFIX = 'AUTOZOOM'
 
-#Get path of file being executed to know what to call from CRON
-def getFullPath():
+def get_full_path():
+    """Gets the full path of the executed file"""
     return __file__.replace('scheduling', 'autozoom')
 
-#Days will be inputted as 'umtwrfs'
-def dayTimeToCron(days, time):
+def day_time_to_cron(days, time):
+    """Converts time to cron, i.e. "mwf 10:00pm" to cron equivalent"""
     days = days.lower()
     for c in days:
         if not c in 'umtwrfs':
@@ -24,16 +24,17 @@ def dayTimeToCron(days, time):
 
     return '{} {} * * {}'.format(minute, hour, cron_days)
 
-#Create the command to run
-def argsToCmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+def args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+    """Creates a command given the arguments"""
     return '{} "python3 {} join {}"'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id) + ' ' + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else '')])
 
-#Create raw line to add to cron
-def createCronLine(name, cron, cmd):
+def create_cron_line(name, cron, cmd):
+    """Create the raw cron lines for the crontab file"""
     global PREFIX
     return '{} {} #[{}]{}'.format(cron, cmd, PREFIX, name)
 
-def getName(line):
+def get_name(line):
+    """Get the name of a given line in crontab"""
     global PREFIX
     head = '[{}]'.format(PREFIX)
     if head in line:
@@ -42,8 +43,8 @@ def getName(line):
 
     return ''
 
-#Check if the crontab already has a name of that schedule
-def addOrReplaceCron(head, crontime, command):
+def add_or_replace_cron(head, crontime, command):
+    """Add a new line to crontab or replace existing one with same name"""
     cron = CronTab(user=getpass.getuser())
 
     added = False
@@ -62,15 +63,17 @@ def addOrReplaceCron(head, crontime, command):
 
     cron.write()
 
-def createHead(name):
+def create_head(name):
+    """Create the header to append to each crontab line"""
     global PREFIX
     return '[{}]{}'.format(PREFIX, name)
 
-def cronUnschedule(schedulename):
+def cron_unschedule(schedulename):
+    """Unschedule a meeting given its schedule name"""
     if schedulename.lower() == 'all':
-        head = createHead('')
+        head = create_head('')
     else:
-       head = createHead(schedulename)
+        head = create_head(schedulename)
 
     cron = CronTab(user=getpass.getuser())
 
@@ -85,20 +88,22 @@ def cronUnschedule(schedulename):
 
     cron.write()
 
-#Used for scheduling Zoom calls to happen at certain times
-def cronSchedule(schedulename, crontime, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+def cron_schedule(schedulename, crontime, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+    """Schedules Zoom calls at certain times according to crontime"""
     global PREFIX
-    head = createHead(schedulename)
-    path = getFullPath()
-    cmd = argsToCmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
+    head = create_head(schedulename)
+    path = get_full_path()
+    cmd = args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
 
-    addOrReplaceCron(head, crontime, cmd)
+    add_or_replace_cron(head, crontime, cmd)
 
 
-def dayTimeSchedule(schedulename, days, time, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
-    cronSchedule(schedulename, dayTimeToCron(days, time), id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
+def day_time_schedule(schedulename, days, time, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+    """Converts daytime to crontime and schedules"""
+    cron_schedule(schedulename, day_time_to_cron(days, time), id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
 
-def listSchedule():
+def list_schedule():
+    """List the schedule as is in crontab"""
     cron = CronTab(user=getpass.getuser())
 
     for job in cron:

@@ -1,12 +1,11 @@
-import pyautogui
 import time
-import sys
 import os
-import argparse
+import pyautogui
 import locate
 from platforms import getPlatform, LINUX, WINDOWS
 
-def restartZoom():
+def restart_zoom():
+    """Closes then re-opens Zoom process"""
     print('Restarting')
     if getPlatform() == LINUX:
         os.system("ps aux | grep zoom | grep autozoom -v |  awk '{print $2}' | xargs kill")
@@ -17,12 +16,13 @@ def restartZoom():
         time.sleep(1)
         os.startfile(os.getenv('APPDATA') + '\\Zoom\\bin\\Zoom.exe')
     else:
-        print('Error: Unsupported operating system: {}. Please submit an issue'.format(plat))
+        print('Error: Unsupported operating system: {}. Please submit an issue'.format(getPlatform()))
         exit(1)
 
-def connect(id, password, audio, video, name, fixdropdown, starttimeout, keytimeout, jointimeout, passtimeout):
+def connect(meet_id, password, audio, video, name, fixdropdown, starttimeout, keytimeout, jointimeout, passtimeout):
+    """Connect to meeting with the options above"""
     #We need to inverse it so it doesn't kill the current process
-    restartZoom()
+    restart_zoom()
     time.sleep(starttimeout)
 
     x, y = locate.locate('btnJoin')
@@ -33,7 +33,7 @@ def connect(id, password, audio, video, name, fixdropdown, starttimeout, keytime
     x, y = locate.locate('txtId')
     pyautogui.click(x, y)
     time.sleep(keytimeout)
-    pyautogui.write(id)
+    pyautogui.write(meet_id)
     time.sleep(keytimeout)
 
     #This is for if the V is not there, users must manually tell it
