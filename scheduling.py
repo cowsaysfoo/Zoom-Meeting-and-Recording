@@ -25,8 +25,8 @@ def dayTimeToCron(days, time):
     return '{} {} * * {}'.format(minute, hour, cron_days)
 
 #Create the command to run
-def argsToCmd(path, id, password, audio, video, record, name):
-    return '{} "python3 {} join {}"'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id) + ' ' + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else '')])
+def argsToCmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+    return '{} "python3 {} join {}"'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id) + ' ' + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else '')])
 
 #Create raw line to add to cron
 def createCronLine(name, cron, cmd):
@@ -86,17 +86,17 @@ def cronUnschedule(schedulename):
     cron.write()
 
 #Used for scheduling Zoom calls to happen at certain times
-def cronSchedule(schedulename, crontime, id, password, audio, video, record, name):
+def cronSchedule(schedulename, crontime, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
     global PREFIX
     head = createHead(schedulename)
     path = getFullPath()
-    cmd = argsToCmd(path, id, password, audio, video, record, name)
+    cmd = argsToCmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
 
     addOrReplaceCron(head, crontime, cmd)
 
 
-def dayTimeSchedule(schedulename, days, time, id, password, audio, video, record, name):
-    cronSchedule(schedulename, dayTimeToCron(days, time), id, password, audio, video, record, name)
+def dayTimeSchedule(schedulename, days, time, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+    cronSchedule(schedulename, dayTimeToCron(days, time), id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
 
 def listSchedule():
     cron = CronTab(user=getpass.getuser())
