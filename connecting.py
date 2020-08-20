@@ -19,7 +19,7 @@ def restart_zoom():
         print('Error: Unsupported operating system: {}. Please submit an issue'.format(getPlatform()))
         exit(1)
 
-def connect(meet_id, password, audio, video, name, fixdropdown, starttimeout, keytimeout, jointimeout, passtimeout):
+def connect(meet_id, password, audio, video, name, fixdropdown, keytimeout, starttimeout, jointimeout, passtimeout):
     """Connect to meeting with the options above"""
     #We need to inverse it so it doesn't kill the current process
     restart_zoom()
