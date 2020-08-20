@@ -26,7 +26,7 @@ def day_time_to_cron(days, time):
 
 def args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
     """Creates a command given the arguments"""
-    return '{} "python3 {} join {}"'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id) + ' ' + ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else '')])
+    return '{} "python3 {} join {} {} "'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id,  ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else ''), ('--cronlauncher True')]))
 
 def create_cron_line(name, cron, cmd):
     """Create the raw cron lines for the crontab file"""

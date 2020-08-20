@@ -1,4 +1,5 @@
 import os
+import logging
 from subprocess import PIPE, Popen
 import pyautogui
 import platform
@@ -38,13 +39,13 @@ def getResolutionsLinux():
         exists = []
         for res in results:
             if not os.path.isdir(res):
-                print('Resolution {} is not supported. Please submit an issue'.format(res))
+                logging.error('Resolution {} is not supported. Please submit an issue'.format(res))
                 exists.append(False)
             else:
                 exists.append(True)
 
         if sum(exists) == 0:
-            print('Error: No supported resolutions.')
+            logging.error('Error: No supported resolutions.')
             exit()
 
         return [res for (res, exist) in zip(results, exists) if exist]
@@ -64,10 +65,12 @@ def locate(name):
     paths = resolveName(name)
 
     for path in paths:
-        print('Using ', path)
+        logging.info('Locating {}'.format(path))
         result =  pyautogui.locateCenterOnScreen(path, confidence=0.5)
 
         if result:
+            logging.info('Found {}'.format(path))
             return result
 
+    logging.info('Could not locate {}'.format(path))
     return None
