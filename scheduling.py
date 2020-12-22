@@ -24,9 +24,9 @@ def day_time_to_cron(days, time):
 
     return '{} {} * * {}'.format(minute, hour, cron_days)
 
-def args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+def args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout, anonymous):
     """Creates a command given the arguments"""
-    return '{} "python3 {} join {} {} "'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id,  ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else ''), ('--cronlauncher True')]))
+    return '{} "python3 {} join {} {} "'.format(path.replace('autozoom.py', 'cronLauncher.sh'), path, id,  ' '.join([('--name '.format(name) if name else ''), ('--password {}'.format(password) if password else ''), ('--audio' if audio else ''), ('--Video' if video else ''), ('--record' if record else ''), ('--keytimeout {}'.format(keytimeout) if keytimeout else ''), ('--starttimeout {}'.format(starttimeout) if starttimeout else ''), ('--jointimeout {}'.format(jointimeout) if jointimeout else ''), ('--passtimeout {}'.format(passtimeout) if passtimeout else ''), ('--cronlauncher True'), ('--anonymous' if anonymous else '')]))
 
 def create_cron_line(name, cron, cmd):
     """Create the raw cron lines for the crontab file"""
@@ -88,25 +88,30 @@ def cron_unschedule(schedulename):
 
     cron.write()
 
-def cron_schedule(schedulename, crontime, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+def cron_schedule(schedulename, crontime, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout, anonymous):
     """Schedules Zoom calls at certain times according to crontime"""
     global PREFIX
     head = create_head(schedulename)
     path = get_full_path()
-    cmd = args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
+    cmd = args_to_cmd(path, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout, anonymous)
 
     add_or_replace_cron(head, crontime, cmd)
 
 
-def day_time_schedule(schedulename, days, time, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout):
+def day_time_schedule(schedulename, days, time, id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout, anonymous):
     """Converts daytime to crontime and schedules"""
-    cron_schedule(schedulename, day_time_to_cron(days, time), id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout)
+    cron_schedule(schedulename, day_time_to_cron(days, time), id, password, audio, video, record, name, keytimeout, starttimeout, jointimeout, passtimeout, anonymous)
 
 def list_schedule():
     """List the schedule as is in crontab"""
     cron = CronTab(user=getpass.getuser())
 
+    has_job = False
     for job in cron:
         if '[{}]'.format(PREFIX) in job.comment:
+            has_job = True
             name = job.comment.split('[{}]'.format(PREFIX))[1]
             print('{} scheduled {}'.format(name, job.description(use_24hour_time_format=False)))
+
+    if not has_job:
+        print('No meetings scheduled')

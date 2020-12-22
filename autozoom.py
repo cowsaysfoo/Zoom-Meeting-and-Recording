@@ -7,21 +7,21 @@ import scheduling
 def join(args):
     logging.debug('Running JOIN')
     """Runs the 'join' command given args"""
-    connecting.connect(args.id, args.password, args.audio, args.video, args.name, args.fixdropdown, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout, args.cronlauncher)
+    connecting.connect(args.id, args.password, args.audio, args.video, args.name, args.fixdropdown, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout, args.cronlauncher, args.anonymous)
     print('Exiting')
 
 def schedule(args):
     """Runs the 'schedule' command given args"""
     if args.cron:
         logging.debug('Running CRONSCHEDULE')
-        scheduling.cron_schedule(args.schedulename, args.cron, args.id, args.password, args.audio, args.video, args.record, args.name, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout)
+        scheduling.cron_schedule(args.schedulename, args.cron, args.id, args.password, args.audio, args.video, args.record, args.name, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout, args.anonymous)
     else:
         logging.debug('Running DATETIMESCHEDULE')
         split = args.datetime.split(' ')
         days = split[0]
         time = ' '.join(split[1:])
 
-        scheduling.day_time_schedule(args.schedulename, days, time, args.id, args.password, args.audio, args.video, args.record, args.name, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout)
+        scheduling.day_time_schedule(args.schedulename, days, time, args.id, args.password, args.audio, args.video, args.record, args.name, args.keytimeout, args.starttimeout, args.jointimeout, args.passtimeout, args.anonymous)
 
 def unschedule(args):
     """Runs the 'unschedule' command given args"""
@@ -32,24 +32,25 @@ def listschedule(args):
     """Runs the 'list' command given args"""
     logging.debug('Running LIST')
     scheduling.list_schedule()
-    
+
 PARSER = argparse.ArgumentParser(description='Join or schedule Zoom calls from the command line')
 COMMAND_PARSERS = PARSER.add_subparsers(title='Commands', description='Subcommands', help='Either join, schedule, list, or unschedule')
 
 JOIN_PARSER = COMMAND_PARSERS.add_parser('join', help='Join a Zoom meeting')
-JOIN_PARSER.add_argument("id",                           help="The id of the meeting to join", type=str)
-JOIN_PARSER.add_argument("-f", "--fixdropdown",        help="Use one less tab when joining. See Meeting ID Dropdown for more info", default=False)
-JOIN_PARSER.add_argument("-a", "--audio",                help="Whether or not to turn on your audio input. Default is false.", action="store_true", default=False)
-JOIN_PARSER.add_argument("-V", "--video",                help="Whether or not to turn on your video input. Default is false.", action="store_true", default=False)
-JOIN_PARSER.add_argument("-v", "--verbose",              help="Enable verbose logging. WIP", action="store_true")
-JOIN_PARSER.add_argument("-n", "--name",                 help="The name to display to others.", type=str, default='')
-JOIN_PARSER.add_argument("-p", "--password",             help="The password of the meeting to join", type=str, default='')
-JOIN_PARSER.add_argument("-r", "--record",               help="Whether or not to record the call. Default is false. WIP", action="store_true", default=False)
-JOIN_PARSER.add_argument("-kto", "--keytimeout",         help="Amount of time to wait between pressing button/keys.", type=int, default=2)
-JOIN_PARSER.add_argument("-sto", "--starttimeout",       help="Amount of time to wait for Zoom to start. Increase if running on a slow PC.", type=int, default=20)
-JOIN_PARSER.add_argument("-jto", "--jointimeout",        help="Amount of time to wait after pressing 'Join' button. Increase if slow internet connection.", type=int, default=20)
-JOIN_PARSER.add_argument("-pto", "--passtimeout",        help="Amount of time to wait after connection to enter password. Increase if slow internet connection.", type=int, default=20)
-JOIN_PARSER.add_argument("-cl", "--cronlauncher",        help="Only set if launched from cronLauncher.sh, don't use yourself", type=bool, default=False)
+JOIN_PARSER.add_argument("id",                          help="The id of the meeting to join", type=str)
+JOIN_PARSER.add_argument("-f", "--fixdropdown",		help="Use one less tab when joining. See Meeting ID Dropdown for more info", default=False)
+JOIN_PARSER.add_argument("-a", "--audio",               help="Whether or not to turn on your audio input. Default is false.", action="store_true", default=False)
+JOIN_PARSER.add_argument("-V", "--video",               help="Whether or not to turn on your video input. Default is false.", action="store_true", default=False)
+JOIN_PARSER.add_argument("-v", "--verbose",             help="Enable verbose logging. WIP", action="store_true")
+JOIN_PARSER.add_argument("-n", "--name",                help="The name to display to others.", type=str, default='')
+JOIN_PARSER.add_argument("-p", "--password",            help="The password of the meeting to join", type=str, default='')
+JOIN_PARSER.add_argument("-r", "--record",              help="Whether or not to record the call. Default is false. WIP", action="store_true", default=False)
+JOIN_PARSER.add_argument("-kto", "--keytimeout",        help="Amount of time to wait between pressing button/keys.", type=int, default=2)
+JOIN_PARSER.add_argument("-sto", "--starttimeout",      help="Amount of time to wait for Zoom to start. Increase if running on a slow PC.", type=int, default=20)
+JOIN_PARSER.add_argument("-jto", "--jointimeout",       help="Amount of time to wait after pressing 'Join' button. Increase if slow internet connection.", type=int, default=20)
+JOIN_PARSER.add_argument("-pto", "--passtimeout",       help="Amount of time to wait after connection to enter password. Increase if slow internet connection.", type=int, default=20)
+JOIN_PARSER.add_argument("-cl", "--cronlauncher",       help="Only set if launched from cronLauncher.sh, don't use yourself", type=bool, default=False)
+JOIN_PARSER.add_argument("-A", "--anonymous",		help="Join meetings when not logged into Zoom account", action='store_true')
 
 JOIN_PARSER.set_defaults(func=join)
 
@@ -67,6 +68,7 @@ SCHEDULE_PARSER.add_argument("-kto", "--keytimeout",     help="Amount of time to
 SCHEDULE_PARSER.add_argument("-sto", "--starttimeout",   help="Amount of time to wait for Zoom to start. Increase if running on a slow PC.", type=int, default=20)
 SCHEDULE_PARSER.add_argument("-jto", "--jointimeout",    help="Amount of time to wait after pressing 'Join' button. Increase if slow internet connection.", type=int, default=20)
 SCHEDULE_PARSER.add_argument("-pto", "--passtimeout",    help="Amount of time to wait after connection to enter password. Increase if slow internet connection.", type=int, default=20)
+SCHEDULE_PARSER.add_argument("-A", "--anonymous",		help="Join meetings when not logged into Zoom account", action='store_true')
 
 TIME_GROUP = SCHEDULE_PARSER.add_mutually_exclusive_group(required=True)
 TIME_GROUP.add_argument("-c", "--cron",          help="Custom CRON schedule. (* * * * *). Only use if you know what you're doing. Linux only", type=str)

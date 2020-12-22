@@ -26,88 +26,96 @@ def restart_zoom():
         logging.error('Unsupported operating system: {}. Please submit an issue'.format(getPlatform()))
         exit(1)
 
-def connect(meet_id, password, audio, video, name, fixdropdown, keytimeout, starttimeout, jointimeout, passtimeout, cronlauncher):
-    """Connect to meeting with the options above"""
-    
-    #Only start zoom if not started by cronlauncher script
-    if not cronlauncher:
-        restart_zoom()
-    
-    time.sleep(starttimeout)
+def connect(meet_id, password, audio, video, name, fixdropdown, keytimeout, starttimeout, jointimeout, passtimeout, cronlauncher, anonymous):
+	"""Connect to meeting with the options above"""
 
-    x, y = locate.locate('btnJoin')
-    pyautogui.click(x, y)
-    time.sleep(jointimeout)
+	#Only start zoom if not started by cronlauncher script
+	if not cronlauncher:
+		restart_zoom()
 
-    #Enter meeting id
-    x, y = locate.locate('txtId')
-    pyautogui.click(x, y)
-    time.sleep(keytimeout)
-    pyautogui.write(meet_id)
-    time.sleep(keytimeout)
+	time.sleep(starttimeout)
 
-    #This is for if the V is not there, users must manually tell it
-    if not fixdropdown:
-        pyautogui.press('tab', interval=0.5)
-    pyautogui.press('tab', interval=0.5)
+	if anonymous:
+		x, y = locate.locate('btnAnonymousJoin')
+	else:
+		x, y = locate.locate('btnJoin')
 
-    if name:
-        logging.info('Using custom name')
-        pyautogui.press('backspace', 50)
-        pyautogui.write(name)
-    else:
-        logging.info('Ignoring custom name')
+	pyautogui.click(x, y)
+	time.sleep(jointimeout)
 
-    pyautogui.press('tab', interval=0.5)
+	#Enter meeting id
+	x, y = locate.locate('txtId')
+	pyautogui.click(x, y)
+	time.sleep(keytimeout)
+	pyautogui.write(meet_id)
+	time.sleep(keytimeout)
 
-    #Set audio enable
-    if not audio:
-        logging.info('Enabling audio')
-        pyautogui.press('enter', interval=0.5)
-    else:
-        logging.info('Disabling audio')
+	#This is for if the V is not there, users must manually tell it
+	if not fixdropdown:
+		pyautogui.press('tab', interval=0.5)
+		pyautogui.press('tab', interval=0.5)
 
-    pyautogui.press('tab', interval=0.5)
+	if name:
+		logging.info('Using custom name')
+		pyautogui.press('backspace', 50)
+		pyautogui.write(name)
+	else:
+		logging.info('Ignoring custom name')
 
-    #Set video enable
-    if not video:
-        logging.info('Enabling video')
-        pyautogui.press('enter', interval=0.5)
-    else:
-        logging.info('Disabling video')
+	pyautogui.press('tab', interval=0.5)
 
-    #Navigate to the next screen
-    pyautogui.press('tab', interval=0.5)
-    logging.info('Submitting')
-    pyautogui.press('enter', interval=1)
+	#Set audio enable
+	if not audio:
+		logging.info('Enabling audio')
+		pyautogui.press('enter', interval=0.5)
+	else:
+		logging.info('Disabling audio')
 
-    #Password
-    if password:
-        logging.info('Using password. Waiting...')
-        time.sleep(passtimeout)
+	pyautogui.press('tab', interval=0.5)
 
-        #Check for error message
-        result = locate.locate('errorid')
+	#Set video enable
+	if not video:
+		logging.info('Enabling video')
+		pyautogui.press('enter', interval=0.5)
+	else:
+		logging.info('Disabling video')
 
-        #If there is an error message, remove it
-        if result:
-            x, y = locate.locate('btnLeave')
-            pyautogui.click(x, y)
-            time.sleep(keytimeout)
+	#Click an extra tab
+	if anonymous:
+		pyautogui.press('tab', interval=0.5)
 
-        result = locate.locate('txtPass')
+	#Navigate to the next screen
+	pyautogui.press('tab', interval=0.5)
+	logging.info('Submitting')
+	pyautogui.press('enter', interval=1)
 
-        #If the error was actuall fake, and password thing is there, enter the password
-        if result:
-            x, y = result
-            pyautogui.click(x, y)
-            time.sleep(keytimeout)
-            pyautogui.write(password)
-            time.sleep(keytimeout)
+	#Password
+	if password:
+		logging.info('Using password. Waiting...')
+		time.sleep(passtimeout)
 
-            pyautogui.press('tab', interval=0.5)
-            pyautogui.press('enter', interval=1)
-        else:
-            logging.error('Fatal error occured. Invalid meeting id.')
-    else:
-        logging.info('Ignoring password')
+		#Check for error message
+		result = locate.locate('errorid')
+
+		#If there is an error message, remove it
+		if result:
+			x, y = locate.locate('btnLeave')
+			pyautogui.click(x, y)
+			time.sleep(keytimeout)
+
+		result = locate.locate('txtPass')
+
+		#If the error was actuall fake, and password thing is there, enter the password
+		if result:
+			x, y = result
+			pyautogui.click(x, y)
+			time.sleep(keytimeout)
+			pyautogui.write(password)
+			time.sleep(keytimeout)
+
+			pyautogui.press('tab', interval=0.5)
+			pyautogui.press('enter', interval=1)
+		else:
+			logging.error('Fatal error occured. Invalid meeting id.')
+	else:
+		logging.info('Ignoring password')
