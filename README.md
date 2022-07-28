@@ -157,3 +157,9 @@ Currently, dual monitor support for Windows does not work well. If you have 2 mo
 * Autoscheduling meetings
 * Recording (quietly)
 * Better Resolution independence (Currently support 1920x1080, 1440x2560, 3840x2160)
+
+### To-do in this fork:
+* Improve zoom-meeting-in-progress-checking (both for process restart and for recording start): https://www.easyprogramming.net/raspberrypi/aiim.php
+* Bring back the windows game bar integration from https://github.com/BigchillRK/Zoom-Meeting-and-Recording , but without the time limits (game bar will stop on its own when meeting ends/exits, also make note to make sure screen sharing window set to "Fit to window")
+* Migrate from typing in passwords and IDs to direct launch from OS cmdline/zoom executable cmdline flags
+* Other stuff?
